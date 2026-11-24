@@ -70,7 +70,7 @@
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/mainTabsHolder"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainTopTabsContainer"/>
 
         <com.goodwy.commons.views.MyFloatingActionButton
@@ -113,9 +113,18 @@
             android:id="@+id/mainTabsHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="14dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/liquid_glass_pill"
+            android:elevation="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:tabGravity="fill"
             app:tabIndicator="@null"
-            app:tabMinWidth="150dp"
+            app:tabMinWidth="0dp"
+            app:tabMode="fixed"
             app:tabRippleColor="@null"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
