@@ -23,6 +23,15 @@ jobs:
         with:
           gradle-version: wrapper
 
+      - name: Setup Local Properties
+        run: |
+          keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          echo "storeFile=${{ github.workspace }}/debug.keystore" >> local.properties
+          echo "storePassword=android" >> local.properties
+          echo "keyAlias=androiddebugkey" >> local.properties
+          echo "keyPassword=android" >> local.properties
+
       - name: Build Debug APK
         run: gradle assembleDebug
 
