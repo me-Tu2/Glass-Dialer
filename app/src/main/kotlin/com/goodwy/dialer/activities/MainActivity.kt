@@ -90,8 +90,7 @@ class MainActivity : SimpleActivity() {
         val useBottomNavigationBar = config.bottomNavigationBar
         val oneTabs: Boolean = getAllFragments().size == 1 || !useBottomNavigationBar
         setupEdgeToEdge(
-            padBottomImeAndSystem = listOf(binding.mainTabsHolder),
-            moveBottomSystem = if (oneTabs) listOf(binding.mainDialpadButton) else emptyList()
+            moveBottomSystem = if (oneTabs) listOf(binding.mainDialpadButton, binding.mainTabsHolder) else listOf(binding.mainTabsHolder)
         )
 
         setupOptionsMenu()
@@ -271,7 +270,6 @@ class MainActivity : SimpleActivity() {
 
         checkShortcuts()
         checkErrorDialog()
-        newAppRecommendation()
     }
 
     override fun onPause() {
@@ -574,20 +572,18 @@ class MainActivity : SimpleActivity() {
 
                                 if (number != null) {
                                     val hasPermission = hasPermission(PERMISSION_CALL_PHONE)
-//                                    this.handlePermission(PERMISSION_CALL_PHONE) { hasPermission ->
-                                        val action = if (hasPermission) Intent.ACTION_CALL else Intent.ACTION_DIAL
-                                        val intent = Intent(action).apply {
-                                            data = Uri.fromParts("tel", number, null)
-                                            putExtra(IS_RIGHT_APP, BuildConfig.RIGHT_APP_KEY)
-                                        }
+                                    val action = if (hasPermission) Intent.ACTION_CALL else Intent.ACTION_DIAL
+                                    val intent = Intent(action).apply {
+                                        data = Uri.fromParts("tel", number, null)
+                                        putExtra(IS_RIGHT_APP, BuildConfig.RIGHT_APP_KEY)
+                                    }
 
-                                        val shortcut = ShortcutInfo.Builder(this, "contact_${contact.id}")
-                                            .setShortLabel(name)
-                                            .setIcon(Icon.createWithAdaptiveBitmap(image))
-                                            .setIntent(intent)
-                                            .build()
-                                        this.shortcutManager.pushDynamicShortcut(shortcut)
-//                                    }
+                                    val shortcut = ShortcutInfo.Builder(this, "contact_${contact.id}")
+                                        .setShortLabel(name)
+                                        .setIcon(Icon.createWithAdaptiveBitmap(image))
+                                        .setIntent(intent)
+                                        .build()
+                                    this.shortcutManager.pushDynamicShortcut(shortcut)
                                 }
                             }
                         }
@@ -609,16 +605,12 @@ class MainActivity : SimpleActivity() {
                 updateBottomTabItemColors(inactiveView, false, getDeselectedTabDrawableIds()[index])
             }
 
-            val bottomBarColor =
-                if (isDynamicTheme() && !isSystemInDarkMode()) getColoredMaterialStatusBarColor()
-                else getSurfaceColor()
-            binding.mainTabsHolder.setBackgroundColor(bottomBarColor)
+            binding.mainTabsHolder.setBackgroundResource(R.drawable.liquid_glass_pill)
         } else {
             // top tab bar
             val lastUsedPage = getDefaultTab()
             val properTextColor = getProperTextColor()
             binding.mainTopTabsHolder.apply {
-                //background = ColorDrawable(getProperBackgroundColor())
                 setSelectedTabIndicatorColor(getProperBackgroundColor())
                 getTabAt(lastUsedPage)?.select()
                 getTabAt(lastUsedPage)?.icon?.applyColorFilter(properPrimaryColor)
@@ -803,19 +795,12 @@ class MainActivity : SimpleActivity() {
                 if (config.closeSearch) {
                     closeSearch()
                 } else {
-                    //On tab switch, the search string is not deleted
-                    //It should not start on the first startup
                     if (isSearchOpen) getCurrentFragment()?.onSearchQueryChanged(searchQuery)
                 }
 
                 binding.viewPager.currentItem = it.position
                 it.icon?.applyColorFilter(properPrimaryColor)
                 it.icon?.alpha = 220 // max 255
-
-//                val lastPosition = binding.mainTopTabsHolder.tabCount - 1
-//                if (it.position == lastPosition && config.showTabs and TAB_CALL_HISTORY > 0) {
-//                    clearMissedCalls()
-//                }
 
                 if (config.openSearch) {
                     if (getCurrentFragment() is ContactsFragment) {
@@ -858,18 +843,11 @@ class MainActivity : SimpleActivity() {
                 if (config.closeSearch) {
                     binding.mainMenu.closeSearch()
                 } else {
-                    //On tab switch, the search string is not deleted
-                    //It should not start on the first startup
                     if (binding.mainMenu.isSearchOpen) getCurrentFragment()?.onSearchQueryChanged(binding.mainMenu.getCurrentQuery())
                 }
 
                 binding.viewPager.currentItem = it.position
                 updateBottomTabItemColors(it.customView, true, getSelectedTabDrawableIds()[it.position])
-
-//                val lastPosition = binding.mainTabsHolder.tabCount - 1
-//                if (it.position == lastPosition && config.showTabs and TAB_CALL_HISTORY > 0) {
-//                    clearMissedCalls()
-//                }
 
                 if (config.openSearch && config.showSearchBar) {
                     if (getCurrentFragment() is ContactsFragment) {
@@ -1144,9 +1122,6 @@ class MainActivity : SimpleActivity() {
                 ).andThen(
                     binding.mainCallButton.scale(1f)
                 ).subscribe()
-//                val state = phoneState.call.getStateCompat()
-//                if (state == Call.STATE_RINGING) {
-//                }
             }
 
             is TwoCalls -> { }
@@ -1182,7 +1157,6 @@ class MainActivity : SimpleActivity() {
                             putExtra(Intent.EXTRA_SUBJECT, body)
                             putExtra(Intent.EXTRA_TEXT, lastError)
 
-                            // set the type for better compatibility
                             type = "message/rfc822"
                         }
 
