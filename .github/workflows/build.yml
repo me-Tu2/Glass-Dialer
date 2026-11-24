@@ -33,7 +33,14 @@ jobs:
           echo "keyPassword=android" >> local.properties
 
       - name: Build Debug APK
-        run: gradle assembleDebug
+        run: |
+          if grep -q '"foss"' app/build.gradle.kts; then
+            gradle assembleFossDebug
+          elif grep -q '"core"' app/build.gradle.kts; then
+            gradle assembleCoreDebug
+          else
+            gradle assembleFossDebug
+          fi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
