@@ -324,8 +324,8 @@ class CallActivity : SimpleActivity() {
 
     override fun onResume() {
         super.onResume()
-        callRecordHolder?.visibility = android.view.View.VISIBLE
-        callRecordHolder?.background = LiquidGlassStudio.createBarDrawable(this)
+        binding.callRecordHolder.visibility = android.view.View.VISIBLE
+        binding.callRecordHolder.background = LiquidGlassStudio.createBarDrawable(this)
         updateState()
     }
 
