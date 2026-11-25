@@ -936,6 +936,9 @@ class CallActivity : SimpleActivity() {
             }
 
             updateMicrophoneButton()
+            binding.callRecordHolder?.visibility = android.view.View.VISIBLE
+            binding.callRecordHolder?.alpha = 1f
+            binding.callRecordHolder?.bringToFront()
 
             isSpeakerOn = route == AudioRoute.SPEAKER
             val supportedAudioRoutes = CallManager.getSupportedAudioRoutes()

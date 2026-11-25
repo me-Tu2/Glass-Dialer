@@ -533,6 +533,7 @@
 
         <LinearLayout
             android:id="@+id/callRecordHolder"
+            android:visibility="visible"
             android:layout_width="wrap_content"
             android:layout_height="42dp"
             android:layout_marginBottom="20dp"
