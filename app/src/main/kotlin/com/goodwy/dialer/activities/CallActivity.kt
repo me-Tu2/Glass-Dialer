@@ -332,6 +332,7 @@ class CallActivity : SimpleActivity() {
     @Suppress("DEPRECATION")
     @SuppressLint("MissingSuperCall", "Wakelock")
     override fun onDestroy() {
+        stopCallRecording(true)
         super.onDestroy()
         CallManager.removeListener(callCallback)
         disableProximitySensor()
@@ -369,21 +370,138 @@ class CallActivity : SimpleActivity() {
         return false
     }
 
-    private fun openODialerForRecording() {
-        val oDialerPackages = listOf("com.oplus.dialer", "com.coloros.dialer")
-        var launched = false
-        for (pkg in oDialerPackages) {
-            val launchIntent = packageManager.getLaunchIntentForPackage(pkg)
-            if (launchIntent != null) {
-                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                startActivity(launchIntent)
-                launched = true
+    private var callMediaRecorder: android.media.MediaRecorder? = null
+    private var isRecordingCall = false
+    private var recordStartTimeMs = 0L
+    private var tempRecordFile: java.io.File? = null
+    private val recordTimerHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val recordTimerRunnable = object : Runnable {
+        override fun run() {
+            if (!isRecordingCall) return
+            val elapsedSec = ((System.currentTimeMillis() - recordStartTimeMs) / 1000L).toInt()
+            val mins = elapsedSec / 60
+            val secs = elapsedSec % 60
+            binding.callRecordLabel?.text = String.format(java.util.Locale.US, "%02d:%02d", mins, secs)
+            recordTimerHandler.postDelayed(this, 1000L)
+        }
+    }
+
+    private fun toggleCallRecording() {
+        if (isRecordingCall) {
+            stopCallRecording(false)
+        } else {
+            startCallRecording()
+        }
+    }
+
+    private fun startCallRecording() {
+        if (androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            androidx.core.app.ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), 9912)
+            toast("Allow Microphone permission, then tap Record again")
+            return
+        }
+
+        val outFile = java.io.File(cacheDir, "rec_${System.currentTimeMillis()}.m4a")
+        val sources = listOf(
+            android.media.MediaRecorder.AudioSource.VOICE_RECOGNITION,
+            android.media.MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+            android.media.MediaRecorder.AudioSource.MIC
+        )
+
+        var started = false
+        for (src in sources) {
+            val rec = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                android.media.MediaRecorder(this)
+            } else {
+                @Suppress("DEPRECATION")
+                android.media.MediaRecorder()
+            }
+            try {
+                rec.setAudioSource(src)
+                rec.setOutputFormat(android.media.MediaRecorder.OutputFormat.MPEG_4)
+                rec.setAudioEncoder(android.media.MediaRecorder.AudioEncoder.AAC)
+                rec.setAudioEncodingBitRate(128000)
+                rec.setAudioSamplingRate(44100)
+                rec.setOutputFile(outFile.absolutePath)
+                rec.prepare()
+                rec.start()
+                callMediaRecorder = rec
+                started = true
                 break
+            } catch (_: Exception) {
+                try { rec.release() } catch (_: Exception) {}
             }
         }
-        if (!launched) {
-            toast("ODialer not installed")
+
+        if (!started) {
+            toast("Unable to start call recording")
+            return
         }
+
+        tempRecordFile = outFile
+        isRecordingCall = true
+        recordStartTimeMs = System.currentTimeMillis()
+        binding.callRecordLabel?.text = "00:00"
+        binding.callRecordIcon?.applyColorFilter(android.graphics.Color.parseColor("#FF3B30"))
+        val activeBg = android.graphics.drawable.GradientDrawable().apply {
+            shape = android.graphics.drawable.GradientDrawable.RECTANGLE
+            cornerRadius = 100f * resources.displayMetrics.density
+            setColor(android.graphics.Color.argb(115, 220, 38, 38))
+            setStroke((1.5f * resources.displayMetrics.density).toInt(), android.graphics.Color.parseColor("#FF453A"))
+        }
+        binding.callRecordHolder?.background = activeBg
+        recordTimerHandler.removeCallbacks(recordTimerRunnable)
+        recordTimerHandler.postDelayed(recordTimerRunnable, 1000L)
+        toast("Recording started")
+    }
+
+    private fun stopCallRecording(silent: Boolean = false) {
+        if (!isRecordingCall) return
+        isRecordingCall = false
+        recordTimerHandler.removeCallbacks(recordTimerRunnable)
+        try { callMediaRecorder?.stop() } catch (_: Exception) {}
+        try { callMediaRecorder?.release() } catch (_: Exception) {}
+        callMediaRecorder = null
+
+        binding.callRecordLabel?.text = "Record"
+        binding.callRecordIcon?.applyColorFilter(android.graphics.Color.parseColor("#FF453A"))
+        binding.callRecordHolder?.background = LiquidGlassStudio.createBarDrawable(this)
+
+        val srcFile = tempRecordFile
+        tempRecordFile = null
+        if (srcFile != null && srcFile.exists() && srcFile.length() > 1024L) {
+            try {
+                val rawName = (binding.callerNameLabel as? android.widget.TextView)?.text?.toString()?.trim().orEmpty()
+                val cleanName = rawName.replace(Regex("[^a-zA-Z0-9_-]"), "_").take(25).ifEmpty { "Call" }
+                val stamp = java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(java.util.Date())
+                val fileName = "${cleanName}_${stamp}.m4a"
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    val values = android.content.ContentValues().apply {
+                        put(android.provider.MediaStore.Audio.Media.DISPLAY_NAME, fileName)
+                        put(android.provider.MediaStore.Audio.Media.MIME_TYPE, "audio/mp4")
+                        put(android.provider.MediaStore.Audio.Media.RELATIVE_PATH, "${android.os.Environment.DIRECTORY_MUSIC}/GlassDialer Recordings")
+                        put(android.provider.MediaStore.Audio.Media.IS_PENDING, 1)
+                    }
+                    val uri = contentResolver.insert(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values)
+                    if (uri != null) {
+                        contentResolver.openOutputStream(uri)?.use { out ->
+                            srcFile.inputStream().use { inp -> inp.copyTo(out) }
+                        }
+                        values.clear()
+                        values.put(android.provider.MediaStore.Audio.Media.IS_PENDING, 0)
+                        contentResolver.update(uri, values, null, null)
+                    }
+                } else {
+                    val dir = java.io.File(getExternalFilesDir(android.os.Environment.DIRECTORY_MUSIC), "GlassDialer Recordings")
+                    dir.mkdirs()
+                    srcFile.copyTo(java.io.File(dir, fileName), overwrite = true)
+                }
+                if (!silent) toast("Saved: Music/GlassDialer Recordings/$fileName")
+            } catch (e: Exception) {
+                if (!silent) toast("Save failed: ${e.message}")
+            }
+        }
+        try { srcFile?.delete() } catch (_: Exception) {}
     }
 
     private fun initButtons() = binding.apply {
@@ -429,7 +547,7 @@ class CallActivity : SimpleActivity() {
         }
 
         callRecordHolder?.setOnClickListener {
-            openODialerForRecording()
+            toggleCallRecording()
             maybePerformDialpadHapticFeedback(it)
         }
 
