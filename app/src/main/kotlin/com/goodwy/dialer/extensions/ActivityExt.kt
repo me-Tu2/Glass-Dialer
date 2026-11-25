@@ -39,50 +39,7 @@ fun SimpleActivity.com.goodwy.dialer.helpers.GlassContactHelper.showAddEditConta
 
 // handle private contacts differently, only Simple Contacts Pro can open them
 fun Activity.startContactDetailsIntent(contact: Contact) {
-    val simpleContacts = "com.goodwy.contacts"
-    val simpleContactsDebug = "com.goodwy.contacts.debug"
-    val newContacts = "dev.goodwy.contacts"
-    val newContactsDebug = "dev.goodwy.contacts.debug"
-    val isPrivateContact = contact.rawId > FIRST_CONTACT_ID
-        && contact.contactId > FIRST_CONTACT_ID
-        && contact.rawId == contact.contactId
-        && (isPackageInstalled(simpleContacts) || isPackageInstalled(simpleContactsDebug) ||
-            isPackageInstalled(newContacts) || isPackageInstalled(newContactsDebug))
-    if (isPrivateContact) {
-        Intent().apply {
-            action = Intent.ACTION_VIEW
-            putExtra(CONTACT_ID, contact.rawId)
-            putExtra(IS_PRIVATE, true)
-            `package` = when {
-                isPackageInstalled(newContacts) -> newContacts
-                isPackageInstalled(simpleContacts) -> simpleContacts
-                isPackageInstalled(newContactsDebug) -> newContactsDebug
-                else -> simpleContactsDebug
-            }
-            setDataAndType(
-                ContactsContract.Contacts.CONTENT_LOOKUP_URI,
-                "vnd.android.cursor.dir/person"
-            )
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            launchActivityIntent(this)
-        }
-    } else {
-        ensureBackgroundThread {
-            val lookupKey =
-                SimpleContactsHelper(this).getContactLookupKey((contact).rawId.toString())
-            val publicUri =
-                Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey)
-            runOnUiThread {
-//                launchViewContactIntent(publicUri)
-                Intent().apply {
-                    action = ContactsContract.QuickContact.ACTION_QUICK_CONTACT
-                    data = publicUri
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    launchActivityIntent(this)
-                }
-            }
-        }
-    }
+    com.goodwy.dialer.helpers.GlassContactHelper.showContactDetails(this, contact.id, contact.name)
 }
 
 //Goodwy
@@ -199,29 +156,7 @@ fun Activity.launchSendSMSIntentRecommendation(recipient: String) {
 }
 
 fun Activity.startContactDetailsIntentRecommendation(contact: Contact) {
-    val isNewApp = true //isNewApp()
-    val simpleContacts = "com.goodwy.contacts"
-    val simpleContactsDebug = "com.goodwy.contacts.debug"
-    val newContacts = "dev.goodwy.contacts"
-    val newContactsDebug = "dev.goodwy.contacts.debug"
-    if ((0..config.appRecommendationDialogCount).random() == 2 &&
-        (!isPackageInstalled(simpleContacts) && !isPackageInstalled(simpleContactsDebug)  &&
-            !isPackageInstalled(newContacts) && !isPackageInstalled(newContactsDebug))
-    ) {
-        NewAppDialog(
-            activity = this,
-            packageName = if (isNewApp) newContacts else simpleContacts,
-            title = getString(R.string.recommendation_dialog_contacts_g),
-            text = if (isNewApp) "AlRight Contacts" else getString(R.string.right_contacts),
-            drawable = AppCompatResources.getDrawable(
-                this,
-                if (isNewApp) R.drawable.ic_contacts_new else R.drawable.ic_contacts)
-        ) {
-            startContactDetailsIntent(contact)
-        }
-    } else {
-        startContactDetailsIntent(contact)
-    }
+    com.goodwy.dialer.helpers.GlassContactHelper.showContactDetails(this, contact.id, contact.name)
 }
 
 fun Activity.newAppRecommendation() {
