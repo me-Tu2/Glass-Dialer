@@ -114,8 +114,8 @@ class CallActivity : SimpleActivity() {
 
         CallManager.addListener(callCallback)
         updateTextColors(binding.callHolder)
-        binding.callRecordIcon.applyColorFilter(Color.parseColor("#FF453A"))
-        binding.callRecordLabel.setTextColor(Color.WHITE)
+        binding.callRecordIcon?.applyColorFilter(Color.parseColor("#FF453A"))
+        binding.callRecordLabel?.setTextColor(Color.WHITE)
 
         if (config.backgroundCallScreen == TRANSPARENT_BACKGROUND) checkPermission()
 
@@ -426,7 +426,7 @@ class CallActivity : SimpleActivity() {
             }
         }
 
-        callRecordHolder.setOnClickListener {
+        callRecordHolder?.setOnClickListener {
             openODialerForRecording()
             maybePerformDialpadHapticFeedback(it)
         }
