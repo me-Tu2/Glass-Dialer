@@ -1009,7 +1009,7 @@ class CallActivity : SimpleActivity() {
         binding.apply {
             dialpadWrapper.beVisible()
             dialpadClose.beVisible()
-            arrayOf(
+            listOfNotNull(
                 callerAvatar, callerNameLabel, callerDescription, callerNumber, callerNotes, callStatusLabel,
                 callSimImage, callSimId, callRecordHolder, callToggleMicrophone, callDialpadHolder,
                 callToggleSpeaker, callAddContactHolder, callInfo, addCallerNote
@@ -1038,7 +1038,7 @@ class CallActivity : SimpleActivity() {
             ).doAfterTerminate {
                 dialpadWrapper.beGone()
                 dialpadClose.beGone()
-                arrayOf(
+                listOfNotNull(
                     callerAvatar, callerNameLabel, callerNumber, callStatusLabel,
                     callRecordHolder, callToggleMicrophone, callDialpadHolder,
                     callToggleSpeaker
