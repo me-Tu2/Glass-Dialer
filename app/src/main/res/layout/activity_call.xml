@@ -268,42 +268,8 @@
             android:visibility="gone"
             app:constraint_referenced_ids="callSwapHolder,callMergeHolder"/>
 
-        <LinearLayout
-            android:id="@+id/callRecordHolder"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_marginBottom="22dp"
-            android:background="@drawable/liquid_glass_pill"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="18dp"
-            android:elevation="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/callDialpadHolder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageView
-                android:id="@+id/call_record_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_microphone_vector" />
-
-            <com.goodwy.commons.views.MyTextView
-                android:id="@+id/call_record_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Record"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/normal_text_size"
-                tools:ignore="HardcodedText" />
-        </LinearLayout>
-
-        <ImageView
+        <LinearLayout android:id="@+id/callRecordHolder" android:layout_width="wrap_content" android:layout_height="40dp" android:background="@drawable/liquid_glass_pill" android:clickable="true" android:focusable="true" android:gravity="center" android:orientation="horizontal" android:paddingStart="18dp" android:paddingEnd="20dp" android:elevation="12dp" app:layout_constraintTop_toBottomOf="@+id/callDialpadHolder" app:layout_constraintBottom_toTopOf="@+id/callEnd" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"><ImageView android:id="@+id/call_record_icon" android:layout_width="16dp" android:layout_height="16dp" android:contentDescription="@null" android:src="@drawable/ic_microphone_vector" /><com.goodwy.commons.views.MyTextView android:id="@+id/call_record_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Record" android:textColor="@android:color/white" android:textSize="@dimen/normal_text_size" tools:ignore="HardcodedText" /></LinearLayout>
+<ImageView
             android:id="@+id/callToggleMicrophone"
             android:layout_width="@dimen/call_button_size"
             android:layout_height="@dimen/call_button_size"

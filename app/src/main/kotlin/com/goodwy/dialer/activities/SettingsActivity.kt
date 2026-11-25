@@ -305,6 +305,7 @@ class SettingsActivity : SimpleActivity() {
     }
 
     private fun setupCustomizeColors() {
+        findViewById<android.view.View>(com.goodwy.dialer.R.id.settings_liquid_glass_holder)?.setOnClickListener { LiquidGlassStudio.showStudioDialog(this) }
         binding.settingsCustomizeColorsHolder.setOnClickListener {
             startCustomizationActivity(
                 showAccentColor = true,

@@ -168,6 +168,7 @@ class MainActivity : SimpleActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (config.bottomNavigationBar) LiquidGlassStudio.applyToBottomBar(this, binding.mainTabsHolder)
         // Checking for active calls
         if (CallManager.getPhoneState() == NoCall) {
             // If there are no calls, delete the call notification.
@@ -605,7 +606,7 @@ class MainActivity : SimpleActivity() {
                 updateBottomTabItemColors(inactiveView, false, getDeselectedTabDrawableIds()[index])
             }
 
-            binding.mainTabsHolder.setBackgroundResource(R.drawable.liquid_glass_pill)
+            LiquidGlassStudio.applyToBottomBar(this, binding.mainTabsHolder)
         } else {
             // top tab bar
             val lastUsedPage = getDefaultTab()

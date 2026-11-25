@@ -1562,7 +1562,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <RelativeLayout
+                    <RelativeLayout android:id="@+id/settings_liquid_glass_holder" style="@style/SettingsHolderStyle" android:layout_width="match_parent" android:layout_height="wrap_content"><com.goodwy.commons.views.MyTextView android:id="@+id/settings_liquid_glass" style="@style/SettingsTextStyle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Liquid Glass UI" tools:ignore="HardcodedText" /><ImageView android:id="@+id/settings_liquid_glass_chevron" style="@style/SettingsChevronStyle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:contentDescription="@null" /></RelativeLayout>
+<RelativeLayout
                         android:id="@+id/settings_export_calls_holder"
                         style="@style/SettingsHolderStyle">
 
