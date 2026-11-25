@@ -398,7 +398,7 @@ class MainActivity : SimpleActivity() {
                 when (menuItem.itemId) {
                     R.id.show_blocked_numbers -> showBlockedNumbers()
                     R.id.clear_call_history -> clearCallHistory()
-                    R.id.create_new_contact -> com.goodwy.dialer.helpers.GlassContactHelper.showAddEditContact(this, null)
+                    R.id.create_new_contact -> com.goodwy.dialer.helpers.GlassContactHelper.showAddEditContact(this@MainActivity, null)
                     R.id.sort -> showSortingDialog(showCustomSorting = getCurrentFragment() is FavoritesFragment)
                     R.id.filter -> showFilterDialog()
                     R.id.settings -> launchSettings()
