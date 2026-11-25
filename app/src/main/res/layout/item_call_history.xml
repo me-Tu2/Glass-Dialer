@@ -79,13 +79,14 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/item_recents_play_recording" app:layout_goneMarginEnd="0dp"
             android:alpha="0.6"
             android:gravity="center|end"
             android:paddingStart="@dimen/medium_margin"
             android:paddingEnd="@dimen/medium_margin"
             android:textSize="@dimen/normal_text_size"
             tools:text="00:10" />
+        <ImageView android:id="@+id/item_recents_play_recording" android:layout_width="34dp" android:layout_height="34dp" android:layout_marginEnd="@dimen/medium_margin" android:background="?attr/selectableItemBackgroundBorderless" android:padding="3dp" android:src="@drawable/ic_glass_play_circle" android:visibility="gone" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/overflow_menu_anchor"

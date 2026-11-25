@@ -186,6 +186,7 @@ class CallHistoryAdapter(
             binding.apply {
                 val currentFontSize = fontSize
 
+                CallRecordingPlayerHelper.bindPlayButton(root.context, itemRecentsPlayRecording, call.startTS.toLong(), call.duration.toLong())
                 itemRecentsDateTime.apply {
                     val date = call.startTS.formatDateOrTime(context, hideTimeOnOtherDays = hideTimeAtOtherDays, false)
                     text = date
