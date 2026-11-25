@@ -74,6 +74,8 @@
         </intent>
     </queries>
 
+        <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
+
     <application
         android:name=".App"
         android:allowBackup="true"

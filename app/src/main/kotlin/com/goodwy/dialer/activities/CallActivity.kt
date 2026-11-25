@@ -403,8 +403,9 @@ class CallActivity : SimpleActivity() {
 
         val outFile = java.io.File(cacheDir, "rec_${System.currentTimeMillis()}.m4a")
         val sources = listOf(
-            android.media.MediaRecorder.AudioSource.VOICE_RECOGNITION,
-            android.media.MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+            android.media.MediaRecorder.AudioSource.VOICE_CALL,
+            android.media.MediaRecorder.AudioSource.UNPROCESSED,
+            android.media.MediaRecorder.AudioSource.CAMCORDER,
             android.media.MediaRecorder.AudioSource.MIC
         )
 
@@ -420,8 +421,8 @@ class CallActivity : SimpleActivity() {
                 rec.setAudioSource(src)
                 rec.setOutputFormat(android.media.MediaRecorder.OutputFormat.MPEG_4)
                 rec.setAudioEncoder(android.media.MediaRecorder.AudioEncoder.AAC)
-                rec.setAudioEncodingBitRate(128000)
-                rec.setAudioSamplingRate(44100)
+                rec.setAudioEncodingBitRate(192000)
+                rec.setAudioSamplingRate(48000)
                 rec.setOutputFile(outFile.absolutePath)
                 rec.prepare()
                 rec.start()

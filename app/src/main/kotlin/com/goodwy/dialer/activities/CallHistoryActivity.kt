@@ -1420,7 +1420,7 @@ class CallHistoryActivity : SimpleActivity() {
 //    }
 
     private fun viewContactInfo(contact: Contact) {
-        this.startContactDetailsIntentRecommendation(contact)
+        this.com.goodwy.dialer.helpers.GlassContactHelper.showContactDetails(this, contact.id, contact.name)
     }
 
     private fun launchShare() {

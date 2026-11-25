@@ -62,7 +62,7 @@ class ContactsFragment(context: Context, attributeSet: AttributeSet) : MyViewPag
             underlineText()
             setOnClickListener {
                 if (context.hasPermission(PERMISSION_READ_CONTACTS)) {
-                    activity?.launchCreateNewContactIntent()
+                    activity?.let { com.goodwy.dialer.helpers.GlassContactHelper.showAddEditContact(it, null) { refreshItems() } }
                 } else {
                     requestReadContactsPermission()
                 }
@@ -259,6 +259,6 @@ class ContactsFragment(context: Context, attributeSet: AttributeSet) : MyViewPag
     }
 
     private fun actionOpen(contact: Contact) {
-        activity?.startContactDetailsIntentRecommendation(contact)
+        activity?.com.goodwy.dialer.helpers.GlassContactHelper.showContactDetails(this, contact.id, contact.name)
     }
 }

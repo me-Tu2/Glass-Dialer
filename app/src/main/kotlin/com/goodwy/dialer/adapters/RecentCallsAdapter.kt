@@ -490,7 +490,7 @@ class RecentCallsAdapter(
 
     private fun launchContactDetailsIntent(contact: Contact?) {
         if (contact != null) {
-            activity.startContactDetailsIntentRecommendation(contact)
+            com.goodwy.dialer.helpers.GlassContactHelper.showContactDetails(activity, contact.id, contact.name) { refreshItemsListener?.invoke() }
         }
     }
 

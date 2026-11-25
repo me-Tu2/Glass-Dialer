@@ -281,6 +281,6 @@ class FavoritesFragment(context: Context, attributeSet: AttributeSet) : MyViewPa
     }
 
     private fun actionOpen(contact: Contact) {
-        activity?.startContactDetailsIntentRecommendation(contact)
+        activity?.com.goodwy.dialer.helpers.GlassContactHelper.showContactDetails(this, contact.id, contact.name)
     }
 }

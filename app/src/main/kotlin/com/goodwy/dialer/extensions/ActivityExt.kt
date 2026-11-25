@@ -29,7 +29,7 @@ import com.goodwy.dialer.BuildConfig
 import com.goodwy.dialer.R
 import com.goodwy.dialer.activities.SimpleActivity
 
-fun SimpleActivity.launchCreateNewContactIntent() {
+fun SimpleActivity.com.goodwy.dialer.helpers.GlassContactHelper.showAddEditContact(this, null) {
     Intent().apply {
         action = Intent.ACTION_INSERT
         data = ContactsContract.Contacts.CONTENT_URI

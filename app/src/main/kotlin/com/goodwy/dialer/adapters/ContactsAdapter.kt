@@ -299,7 +299,7 @@ class ContactsAdapter(
 
     private fun viewContactDetails() {
         val contact = getSelectedItems().firstOrNull() ?: return
-        activity.startContactDetailsIntentRecommendation(contact)
+        com.goodwy.dialer.helpers.GlassContactHelper.showContactDetails(activity, contact.id, contact.name) { refreshItemsListener?.invoke() }
     }
 
     private fun askConfirmDelete() {
@@ -815,7 +815,7 @@ class ContactsAdapter(
         override fun getRoot(): View = binding.root
     }
     private fun viewContactInfo(contact: Contact) {
-        activity.startContactDetailsIntentRecommendation(contact)
+        com.goodwy.dialer.helpers.GlassContactHelper.showContactDetails(activity, contact.id, contact.name) { refreshItemsListener?.invoke() }
     }
 
     private fun swipeActionImageResource(swipeAction: Int): Int {
