@@ -101,6 +101,7 @@ class DialpadActivity : SimpleActivity() {
 
         if (config.hideDialpadNumbers) {
             binding.dialpadClearWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
                 dialpad1Holder.isVisible = false
                 dialpad2Holder.isVisible = false
                 dialpad3Holder.isVisible = false
@@ -115,6 +116,7 @@ class DialpadActivity : SimpleActivity() {
             }
 
             binding.dialpadRoundWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
                 dialpad1IosHolder.isVisible = false
                 dialpad2IosHolder.isVisible = false
                 dialpad3IosHolder.isVisible = false
@@ -128,6 +130,7 @@ class DialpadActivity : SimpleActivity() {
                 dialpad0IosHolder.visibility = View.INVISIBLE
             }
             binding.dialpadRectWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
                 dialpad1Holder.isVisible = false
                 dialpad2Holder.isVisible = false
                 dialpad3Holder.isVisible = false
@@ -279,6 +282,7 @@ class DialpadActivity : SimpleActivity() {
                 binding.dialpadClearWrapper.root.beGone()
                 binding.dialpadRectWrapper.root.beGone()
                 binding.dialpadRoundWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
                     dialpadVoicemail.beVisibleIf(config.showVoicemailIcon && !config.hideDialpadLetters)
                     dialpadIosHolder.beVisible()
                     root.background = LiquidGlassStudio.createPanelDrawable(this@DialpadActivity); dialpadIosHolder.setBackgroundColor(Color.TRANSPARENT)
@@ -312,6 +316,7 @@ class DialpadActivity : SimpleActivity() {
                     if (isDynamicTheme() && !isSystemInDarkMode()) getSurfaceColor() else getProperBackgroundColor()
 
                 binding.dialpadRectWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
                     dialpadVoicemail.beVisibleIf(config.showVoicemailIcon && !config.hideDialpadLetters)
                     root.background = LiquidGlassStudio.createPanelDrawable(this@DialpadActivity); dialpadGridWrapper.setBackgroundColor(Color.TRANSPARENT)
 
@@ -339,6 +344,7 @@ class DialpadActivity : SimpleActivity() {
                 binding.dialpadRoundWrapper.root.beGone()
                 binding.dialpadRectWrapper.root.beGone()
                 binding.dialpadClearWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
                     dialpadVoicemail.beVisibleIf(config.showVoicemailIcon && !config.hideDialpadLetters)
                     dialpadGridHolder.beVisible()
                     root.background = LiquidGlassStudio.createPanelDrawable(this@DialpadActivity); dialpadGridHolder.setBackgroundColor(Color.TRANSPARENT)
@@ -377,6 +383,7 @@ class DialpadActivity : SimpleActivity() {
                 binding.dialpadRoundWrapper.root.beGone()
                 binding.dialpadRectWrapper.root.beGone()
                 binding.dialpadClearWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
                     dialpadVoicemail.beVisibleIf(config.showVoicemailIcon && !config.hideDialpadLetters)
                     dialpadGridHolder.beVisible()
                     root.background = LiquidGlassStudio.createPanelDrawable(this@DialpadActivity); dialpadGridHolder.setBackgroundColor(Color.TRANSPARENT)
@@ -422,6 +429,7 @@ class DialpadActivity : SimpleActivity() {
         }
         val textColor = buttonsColor.getContrastColor()
         binding.dialpadRectWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
             if (config.hideDialpadLetters) {
                 arrayOf(
                     dialpad1Letters, dialpad2Letters, dialpad3Letters, dialpad4Letters, dialpad5Letters,
@@ -624,6 +632,7 @@ class DialpadActivity : SimpleActivity() {
         val areMultipleSIMsAvailable = areMultipleSIMsAvailable()
         val getProperTextColor = getProperTextColor()
         binding.dialpadRoundWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
             if (config.hideDialpadLetters) {
                 arrayOf(
                     dialpad2IosLetters, dialpad3IosLetters, dialpad4IosLetters, dialpad5IosLetters,
@@ -769,6 +778,7 @@ class DialpadActivity : SimpleActivity() {
         val areMultipleSIMsAvailable = areMultipleSIMsAvailable()
         val getProperTextColor = getProperTextColor()
         binding.dialpadClearWrapper.apply {
+            LiquidGlassStudio.applyDialpadGlass(this@DialpadActivity, binding.dialpadHolder, root, binding.dialpadRecentsList, binding.dialpadList, binding.dialpadToolbar)
             if (config.hideDialpadLetters) {
                 arrayOf(
                     dialpad1Letters, dialpad2Letters, dialpad3Letters, dialpad4Letters, dialpad5Letters,

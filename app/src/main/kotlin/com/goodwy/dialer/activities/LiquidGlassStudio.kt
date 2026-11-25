@@ -118,6 +118,22 @@ object LiquidGlassStudio {
         }
     }
 
+
+    fun applyDialpadGlass(activity: Activity, holder: View?, panel: View?, vararg blurViews: View?) {
+        val dimAlpha = (getDimPct(activity) * 2.55f).toInt().coerceIn(0, 215)
+        holder?.setBackgroundColor(Color.argb(dimAlpha, 0, 0, 0))
+        panel?.background = createPanelDrawable(activity)
+        panel?.setPadding(panel.paddingLeft, dp(activity, 14f).toInt(), panel.paddingRight, panel.paddingBottom)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val blur = getBlurRadius(activity)
+            val effect = if (blur > 0) {
+                val r = (blur * 0.65f).coerceAtLeast(1f)
+                android.graphics.RenderEffect.createBlurEffect(r, r, android.graphics.Shader.TileMode.CLAMP)
+            } else null
+            blurViews.forEach { it?.setRenderEffect(effect) }
+        }
+    }
+
     fun applyToDialpad(activity: Activity, glassPanel: View?) {
         activity.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) activity.setTranslucent(true)
