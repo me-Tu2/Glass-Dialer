@@ -29,17 +29,56 @@ import com.goodwy.dialer.BuildConfig
 import com.goodwy.dialer.R
 import com.goodwy.dialer.activities.SimpleActivity
 
-fun SimpleActivity.com.goodwy.dialer.helpers.GlassContactHelper.showAddEditContact(this, null) {
-    Intent().apply {
-        action = Intent.ACTION_INSERT
-        data = ContactsContract.Contacts.CONTENT_URI
-        launchActivityIntent(this)
-    }
+fun SimpleActivity.launchCreateNewContactIntent() {
+    com.goodwy.dialer.helpers.GlassContactHelper.showAddEditContact(this, null)
 }
 
 // handle private contacts differently, only Simple Contacts Pro can open them
 fun Activity.startContactDetailsIntent(contact: Contact) {
-    com.goodwy.dialer.helpers.GlassContactHelper.showContactDetails(this, contact.id, contact.name)
+    val simpleContacts = "com.goodwy.contacts"
+    val simpleContactsDebug = "com.goodwy.contacts.debug"
+    val newContacts = "dev.goodwy.contacts"
+    val newContactsDebug = "dev.goodwy.contacts.debug"
+    val isPrivateContact = contact.rawId > FIRST_CONTACT_ID
+        && contact.contactId > FIRST_CONTACT_ID
+        && contact.rawId == contact.contactId
+        && (isPackageInstalled(simpleContacts) || isPackageInstalled(simpleContactsDebug) ||
+            isPackageInstalled(newContacts) || isPackageInstalled(newContactsDebug))
+    if (isPrivateContact) {
+        Intent().apply {
+            action = Intent.ACTION_VIEW
+            putExtra(CONTACT_ID, contact.rawId)
+            putExtra(IS_PRIVATE, true)
+            `package` = when {
+                isPackageInstalled(newContacts) -> newContacts
+                isPackageInstalled(simpleContacts) -> simpleContacts
+                isPackageInstalled(newContactsDebug) -> newContactsDebug
+                else -> simpleContactsDebug
+            }
+            setDataAndType(
+                ContactsContract.Contacts.CONTENT_LOOKUP_URI,
+                "vnd.android.cursor.dir/person"
+            )
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            launchActivityIntent(this)
+        }
+    } else {
+        ensureBackgroundThread {
+            val lookupKey =
+                SimpleContactsHelper(this).getContactLookupKey((contact).rawId.toString())
+            val publicUri =
+                Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey)
+            runOnUiThread {
+//                launchViewContactIntent(publicUri)
+                Intent().apply {
+                    action = ContactsContract.QuickContact.ACTION_QUICK_CONTACT
+                    data = publicUri
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    launchActivityIntent(this)
+                }
+            }
+        }
+    }
 }
 
 //Goodwy
